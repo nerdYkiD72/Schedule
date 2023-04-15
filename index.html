@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OHHS Schedule</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+
+    <script src="https://kit.fontawesome.com/4cb6af3c2f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src=" https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js "></script>
+</head>
+
+<body>
+    <nav class="navbar nav-box" role="navigation" aria-label="main navigation" id="navBarMenu">
+        <div class="level">
+            <i class="fa-sharp fa-solid fa-clock nav-stuff level-item is-size-4 logo"></i>
+            <h1 class="is-size-3 nav-stuff level-item">Schedule</h1>
+            <!-- <i class="fa-solid fa-bars menu"></i> -->
+            <a href="#0" class="js-cd-panel-trigger fa-solid fa-bars has-text-white menu" data-panel="main"></a>
+        </div>
+    </nav>
+
+    <div class="schedule">
+        <h1 class="title is-size-5 has-text-centered" id="scheduleName">Early Release w/ Advisory</h1>
+        <ul id="scheduleContents">
+            <!-- <li>
+                <div class="is-flex row">
+                    <div class="schedule-item">1</div>
+                    <div class="schedule-time">8:00 AM <i class="fa-solid fa-arrow-right seperator"></i> 8:49 AM</div>
+                </div>
+            </li>
+            <li>
+                <div class="is-flex row is-selected">
+                    <div class="schedule-item">2</div>
+                    <div class="schedule-time">8:00 AM <i class="fa-solid fa-arrow-right seperator"></i> 9:43:00 AM
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="is-flex row">
+                    <div class="schedule-item">Advisory</div>
+                    <div class="schedule-time">8:00 AM <i class="fa-solid fa-arrow-right seperator"></i> 10:18:00 AM
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="is-flex row">
+                    <div class="schedule-item">Lunch</div>
+                    <div class="schedule-time">8:00 AM <i class="fa-solid fa-arrow-right seperator"></i> 10:48:00 AM
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="is-flex row">
+                    <div class="schedule-item">3</div>
+                    <div class="schedule-time">8:00 AM <i class="fa-solid fa-arrow-right seperator"></i> 11:42:00 AM
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="is-flex row">
+                    <div class="schedule-item">4</div>
+                    <div class="schedule-time">8:00 AM <i class="fa-solid fa-arrow-right seperator"></i> 11:12:00 AM
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="is-flex row">
+                    <div class="schedule-item">5</div>
+                    <div class="schedule-time">8:00 AM <i class="fa-solid fa-arrow-right seperator"></i> 1:30:00 PM
+                    </div>
+                </div>
+            </li> -->
+        </ul>
+        <p id="message" class="has-text-centered">Ayo its ya boi</p>
+
+        <div class="lunch-selection">
+            <h2>Lunch</h2>
+            <label class="toggle">
+                <input type="checkbox" id="lunchSelector" onchange="handleLunchChange()">
+                <span class="slider"></span>
+                <span class="labels" data-on="A" data-off="B"></span>
+            </label>
+        </div>
+        <div>
+            <p class="clock" id="clock"></p>
+            <p class="date" id="date">april fools</p>
+        </div>
+
+    </div>
+    <!-- SLIDE OUT SETTINGS -->
+    <div class="cd-panel cd-panel--from-right js-cd-panel-main">
+        <header class="cd-panel__header">
+            <h1>Settings</h1>
+            <a href="#0" class="cd-panel__close js-cd-close">Close</a>
+        </header>
+
+        <div class="cd-panel__container">
+            <div class="cd-panel__content">
+                <div class="control">
+                    <div class="settings-item">
+                        <p>Manual Schedule Selection</p>
+                        <div class="dropdown" id="manualScheduleSelection">
+                            <div class="dropdown-trigger">
+                                <button class="button drop-down-dark" aria-haspopup="true" aria-controls="dropdown-menu"
+                                    onclick="handleDropDown('manualScheduleSelection')">
+                                    <span id="manualScheduleSelectionName">Dropdown button</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu " id="dropdown-menu" role="menu">
+                                <div class="dropdown-content drop-down-dark" id="dropDownContent">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-item">
+                        <p>Auto Schedule Picking</p>
+                        <label class="">
+                            <input type="checkbox" id="autoSchedulePickingInput" onclick="handleAutoToggle()">
+                            Enabled
+                        </label>
+                    </div>
+
+
+
+                </div> <!-- cd-panel__content -->
+            </div> <!-- cd-panel__container -->
+        </div> <!-- cd-panel -->
+        <script src="slideout.js"></script> <!-- Resource JavaScript -->
+
+</body>
+<script src="app.js"></script>
+
+</html>
