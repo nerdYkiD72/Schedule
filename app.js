@@ -7,6 +7,7 @@ const scheduleSelectionDropDown = {
 };
 const scheduleName = document.getElementById("scheduleName");
 const autoSchedulePickingInput = document.getElementById("autoSchedulePickingInput");
+const scheduleTimeRefreshRate = document.getElementById("scheduleTimeRefreshRate");
 
 const LUNCH_KEY = "lunchType";
 var schedulesLibrary;
@@ -17,6 +18,7 @@ const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const monthsOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 var doAutoPicking = true;
 var firstRun = true;
+var refreshRate = 60;
 
 /**
  * Work on:
@@ -103,6 +105,11 @@ function handleLunchChange() {
 
     console.log(`Switching to ${lunch} lunch`);
     update();
+}
+
+function handleRefreshRateChange() {
+    console.log(scheduleTimeRefreshRate.value);
+    refreshRate = parseInt(scheduleTimeRefreshRate.value);
 }
 
 function parseSchedule(parsedCSV) {
@@ -215,10 +222,9 @@ function findCurrentPeriod(schedule) {
     schedule = lunch === "A" ? schedule.aLunch : schedule.bLunch;
 
     let timeNow = new Date();
-
-    // DEBUGGING TIMES:
-    // timeNow.setHours(8);
-    // timeNow.setMinutes(50);
+    // Debugging:
+    timeNow.setHours(9);
+    timeNow.setMinutes(12);
 
     // console.log(parseTimeString(schedule[4].start));
 
@@ -315,12 +321,16 @@ function getTimeLeft(endTime, dateNow) {
     timeLeft.setHours(hrsLeft, minsLeft, 0, 0);
 
     if (timeLeft.getHours() >= 1 && timeLeft.getMinutes() <= 1) {
+        document.title = `${timeLeft.getHours()}:${timeLeft.getMinutes()} left`;
         return `There is <mark class="important-text">${timeLeft.getHours()} hour </mark> and <mark class="important-text">${timeLeft.getMinutes()} minute</mark> left in this period`;
     } else if (timeLeft >= oneHrLeft && timeLeft.getMinutes() > 1) {
+        document.title = `${timeLeft.getHours()}:${timeLeft.getMinutes()} left`;
         return `There is <mark class="important-text">${timeLeft.getHours()} hour </mark>  and <mark class="important-text">${timeLeft.getMinutes()} minutes</mark> left in this period`;
     } else if (timeLeft.getMinutes() > 1) {
+        document.title = `${timeLeft.getMinutes()} minutes left`;
         return `There are <mark class="important-text">${timeLeft.getMinutes()} minutes </mark> left in this period`;
     } else if (timeLeft.getMinutes() <= 1) {
+        document.title = `${timeLeft.getMinutes()} minute left`;
         return `There is <mark class="important-text">${timeLeft.getMinutes()} minute </mark> left in this period`;
     }
 }
@@ -390,6 +400,10 @@ function clock() {
     let t = setTimeout(function () {
         clock();
     }, 1000);
+}
+
+function updateTimeLeft() {
+    findCurrentPeriod(loadedSchedule);
 }
 
 window.onload = async () => {
