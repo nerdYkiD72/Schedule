@@ -10,6 +10,7 @@ const autoSchedulePickingInput = document.getElementById("autoSchedulePickingInp
 const scheduleTimeRefreshRate = document.getElementById("scheduleTimeRefreshRate");
 
 const LUNCH_KEY = "lunchType";
+const REFRESH_KEY = "refreshRate";
 var schedulesLibrary;
 var lunch;
 var loadedSchedule;
@@ -19,6 +20,7 @@ const monthsOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "S
 var doAutoPicking = true;
 var firstRun = true;
 var refreshRate = 60;
+var timeLeftIntervalID;
 
 /**
  * Work on:
@@ -110,6 +112,10 @@ function handleLunchChange() {
 function handleRefreshRateChange() {
     console.log(scheduleTimeRefreshRate.value);
     refreshRate = parseInt(scheduleTimeRefreshRate.value);
+    localStorage.setItem(REFRESH_KEY, refreshRate);
+
+    clearInterval(timeLeftIntervalID);
+    updateTimeLeft();
 }
 
 function parseSchedule(parsedCSV) {
@@ -223,10 +229,8 @@ function findCurrentPeriod(schedule) {
 
     let timeNow = new Date();
     // Debugging:
-    timeNow.setHours(9);
-    timeNow.setMinutes(12);
-
-    // console.log(parseTimeString(schedule[4].start));
+    // timeNow.setHours(9);
+    // timeNow.setMinutes(12);
 
     // console.log(timeNow);
 
@@ -283,6 +287,7 @@ function findCurrentPeriod(schedule) {
                 }
             }
         } else {
+            document.title = "OHHS Schedule";
             console.log("Why are you checking the schedule when your not at school? Nerd 🤓");
             setMessageText("Why are you checking the schedule when your not at school? Nerd 🤓");
         }
@@ -364,18 +369,18 @@ function clock() {
     const dayOfMonth = date.getDate();
 
     // Update schedule every 10 minutes
-    if ((mm % 10 == 0 && doAutoPicking) || firstRun) {
-        let i = 0;
-        firstRun = false;
-        schedulesLibrary.forEach((element) => {
-            element.appliesTo.forEach((day) => {
-                if (day.toLowerCase() === dayOfWeek.toLowerCase()) {
-                    loadSchedule(i);
-                }
-            });
-            i++;
-        });
-    }
+    // if ((mm % 10 == 0 && doAutoPicking) || firstRun) {
+    //     let i = 0;
+    //     firstRun = false;
+    //     schedulesLibrary.forEach((element) => {
+    //         element.appliesTo.forEach((day) => {
+    //             if (day.toLowerCase() === dayOfWeek.toLowerCase()) {
+    //                 loadSchedule(i);
+    //             }
+    //         });
+    //         i++;
+    //     });
+    // }
 
     if (hh == 0) {
         hh = 12;
@@ -403,15 +408,21 @@ function clock() {
 }
 
 function updateTimeLeft() {
-    findCurrentPeriod(loadedSchedule);
+    timeLeftIntervalID = setInterval(() => {
+        console.log("Refreshing.");
+        findCurrentPeriod(loadedSchedule);
+    }, refreshRate * 1000);
 }
 
 window.onload = async () => {
     lunch = localStorage.getItem(LUNCH_KEY);
+    refreshRate = localStorage.getItem(REFRESH_KEY);
+    scheduleTimeRefreshRate.value = refreshRate;
     lunchSelector.checked = lunch == "A" ? true : false;
     autoSchedulePickingInput.checked = true;
 
     await getScheduleLibrary();
     loadSchedule(0);
     clock();
+    updateTimeLeft();
 };
