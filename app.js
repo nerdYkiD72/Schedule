@@ -21,6 +21,7 @@ var doAutoPicking = true;
 var firstRun = true;
 var refreshRate = 60;
 var timeLeftIntervalID;
+var clockRunning = false;
 
 /**
  * Work on:
@@ -92,6 +93,9 @@ function loadSchedule(scheduleIndex) {
             scheduleName.innerHTML = title;
             document.getElementById(`${scheduleSelectionDropDown.parentButtonID}Name`).innerHTML = title;
             handleLunchChange();
+            if (!clockRunning) {
+                clock();
+            }
         },
     });
 }
@@ -115,7 +119,7 @@ function handleRefreshRateChange() {
     localStorage.setItem(REFRESH_KEY, refreshRate);
 
     clearInterval(timeLeftIntervalID);
-    updateTimeLeft();
+    timeLeftIntervalID = null;
 }
 
 function parseSchedule(parsedCSV) {
@@ -242,6 +246,11 @@ function findCurrentPeriod(schedule) {
         var inPeriod = timeNow < endTime && timeNow > startTime ? true : false; // compare
 
         if (inPeriod) {
+            // In a period, remove all the selected items first
+            schedule.forEach((element) => {
+                removeSelected(element.period);
+            });
+            // Then select the right period.
             setSelected(element.period);
             found = true;
 
@@ -398,8 +407,12 @@ function clock() {
 
     const formattedDate = `${dayOfWeek}, ${month} ${dayOfMonth}`;
 
-    // console.log(formattedDate); // output: "Tue, Apr 4"
-
+    // Update the time left synced with the clock.
+    if (timeLeftIntervalID == null) {
+        if (ss == "00" || ss == refreshRate || ss % refreshRate === 0) {
+            updateTimeLeft();
+        }
+    }
     document.getElementById("clock").innerText = time;
     document.getElementById("date").innerHTML = formattedDate;
     let t = setTimeout(function () {
@@ -423,6 +436,6 @@ window.onload = async () => {
 
     await getScheduleLibrary();
     loadSchedule(0);
-    clock();
-    updateTimeLeft();
+    // clock();
+    // updateTimeLeft();
 };
