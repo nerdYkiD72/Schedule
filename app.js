@@ -18,7 +18,6 @@ var rawScheduleContents;
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const monthsOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 var doAutoPicking = true;
-var firstRun = true;
 var refreshRate = 60;
 var timeLeftIntervalID;
 var clockRunning = false;
@@ -102,7 +101,6 @@ function loadSchedule(scheduleIndex) {
 
 function handleAutoToggle() {
     doAutoPicking = autoSchedulePickingInput.checked;
-    firstRun = doAutoPicking ? true : false;
 }
 
 function handleLunchChange() {
@@ -427,6 +425,26 @@ function updateTimeLeft() {
     }, refreshRate * 1000);
 }
 
+function findScheduleIndex() {
+    let date = new Date();
+    const dayOfWeek = daysOfWeek[date.getDay()];
+
+    if (doAutoPicking) {
+        for (let i = 0; i < schedulesLibrary.length; i++) {
+            const element = schedulesLibrary[i];
+            for (let j = 0; j < element.appliesTo.length; j++) {
+                const e = element.appliesTo[j];
+                if (day === dayOfWeek) {
+                    console.log(day);
+                    console.log(element.location);
+                    console.log(i);
+                    return i;
+                }
+            }
+        }
+    }
+}
+
 window.onload = async () => {
     lunch = localStorage.getItem(LUNCH_KEY);
     refreshRate = localStorage.getItem(REFRESH_KEY);
@@ -435,7 +453,16 @@ window.onload = async () => {
     autoSchedulePickingInput.checked = true;
 
     await getScheduleLibrary();
-    loadSchedule(0);
+    console.log(findScheduleIndex());
+    loadSchedule(findScheduleIndex());
+    // loadSchedule(0);
     // clock();
     // updateTimeLeft();
+    // findScheduleIndex();
 };
+
+// Dubbing
+function addClass(el, className) {
+    if (el.classList) el.classList.add(className);
+    else if (!hasClass(el, className)) el.className += " " + className;
+}

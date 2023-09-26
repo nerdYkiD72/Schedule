@@ -2,11 +2,11 @@
     {
         "location": "assets/Schedules - Regular Schedule.csv",
         "name": "Regular Schedule",
-        "appliesTo": ["tue", "wed", "thu", "fri"]
+        "appliesTo": ["Tue", "Wed", "Tu", "Fri"]
     },
     {
         "location": "assets/Schedules - Early Release w_ Advisory.csv",
         "name": "Early Release w/ Advisory",
-        "appliesTo": ["mon"]
+        "appliesTo": ["Mon"]
     }
 ]
