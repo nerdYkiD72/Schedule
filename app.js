@@ -433,7 +433,7 @@ function findScheduleIndex() {
         for (let i = 0; i < schedulesLibrary.length; i++) {
             const element = schedulesLibrary[i];
             for (let j = 0; j < element.appliesTo.length; j++) {
-                const e = element.appliesTo[j];
+                const day = element.appliesTo[j];
                 if (day === dayOfWeek) {
                     console.log(day);
                     console.log(element.location);
